@@ -32,10 +32,10 @@ int main(void)
     // DeleteString(second_dns); 
 
 
-    M_Arena arena;
-    ArenaInitSized(&arena, 4096);
+    M_Arena arena = ArenaInitSized(Kilobytes(16));
+    char* arenaString = "Dilapidated, delinquent, federline Jones!";
 
-    String arenaF = M_CreateString(&arena, "Dilapidated, delinquent, federline Jones!");
+    String arenaF = M_CreateString(&arena, arenaString);
     String arenaSliced = M_CreateSlicedString(&arena, &arenaF, 18, 29);
 
     PrintString(&arenaF);

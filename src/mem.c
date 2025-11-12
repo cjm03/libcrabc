@@ -1,100 +1,57 @@
-// mem.h - Memory Arenas
+// mem.c - Memory Arenas
 
-#include <string.h>
-#include <assert.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <stdint.h>
-#include <sys/mman.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include "../include/mem.h"
-#include "../include/define.h"
 
-#define DEFAULT_ALIGNMENT sizeof(void*)
-
-// Alignment
-
-b8 IsPowerOfTwo(uintptr_t x) {
-    return (x & (x - 1)) == 0;
+int IsPowerOfTwo(size_t x) {
+    if ((x & (x - 1)) == 0) return 1;
+    else return 0;
 }
 
-u64 AlignForwardU64(u64 ptr, u64 align) {
-    u64 p, a, modulo;
-    assert(IsPowerOfTwo(align));
-    p = ptr;
-    a = (size_t)align;
-    modulo = p & (a - 1);
-    if (modulo != 0) {
-        p += a - modulo;
-    }
+size_t AlignForward(size_t type, size_t alignment) {
+    size_t p, a, mod;
+    int ret = IsPowerOfTwo(alignment);
+    if (ret != 1) exit(EXIT_FAILURE);
+    p = type;
+    a = alignment;
+    mod = p & (a - 1);
+    if (mod != 0) p += a - mod;
     return p;
 }
 
-// Arena
-
-void* ArenaAlloc(M_Arena* arena, u64 size) {
-    void* memory = 0;
-    size = AlignForwardU64(size, DEFAULT_ALIGNMENT);
-    if (arena->alloc_position + size > arena->commit_position) {
-        if (!arena->static_size) {
-            u64 commit_size = size;
-            commit_size += M_ARENA_COMMIT_SIZE - 1;
-            commit_size -= commit_size % M_ARENA_COMMIT_SIZE;
-            if (arena->commit_position >= arena->max) {
-                assert(0 && "Arena is out of memory");
-            } else {
-                mprotect(arena->memory + arena->commit_position, commit_size, PROT_READ | PROT_WRITE);
-                arena->commit_position += commit_size;
-            }
-        } else {
-            assert(0 && "Static-Size Arena is out of memory");
-        }
-    }
-    memory = arena->memory + arena->alloc_position;
-    arena->alloc_position += size;
-    return memory;
+M_Arena ArenaInitSized(size_t capacity) {
+    void* init = calloc(capacity, 1);
+    M_Arena arena;
+    arena.start = init;
+    arena.current = init;
+    arena.end = init + capacity;
+    return arena;
 }
 
-void* ArenaAllocZero(M_Arena* arena, u64 size) {
-    void* result = ArenaAlloc(arena, size);
-    memset(result, 0, size);
-    return result;
+M_Arena ArenaInit(void) {
+    M_Arena arena = ArenaInitSized(M_ARENA_DEFAULT);
+    return arena;
 }
 
-void ArenaDealloc(M_Arena* arena, u64 size) {
-    if (size > arena->alloc_position) {
-        size = arena->alloc_position;
-    }
-    arena->alloc_position -= size;
-}
-
-void* ArenaAllocArraySized(M_Arena* arena, u64 elem_size, u64 count) {
-    return ArenaAlloc(arena, elem_size * count);
-}
-
-void ArenaInit(M_Arena* arena) {
-    memset(arena, 0, sizeof(M_Arena));
-    arena->max = M_ARENA_MAX;
-    arena->memory = mmap(NULL, arena->max, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    arena->alloc_position = 0;
-    arena->commit_position = 0;
-    arena->static_size = false;
-}
-
-void ArenaInitSized(M_Arena* arena, u64 max) {
-    memset(arena, 0, sizeof(M_Arena));
-    arena->max = max;
-    arena->memory = mmap(NULL, arena->max, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    arena->alloc_position = 0;
-    arena->commit_position = 0;
-    arena->static_size = false;
+void* ArenaAlloc(M_Arena* arena, size_t size) {
+    if (arena == 0) return NULL;
+    size_t aligned = AlignForward(size, DEFAULT_ALIGNMENT);
+    if (arena->current + aligned >= arena->end) return NULL;
+    void* p = arena->current;
+    arena->current += aligned;
+    return p;
 }
 
 void ArenaClear(M_Arena* arena) {
-    ArenaDealloc(arena, arena->alloc_position);
+    arena->current = arena->start;
 }
 
 void ArenaFree(M_Arena* arena) {
-    munmap(arena->memory, arena->max);
+    free(arena->start);
+    arena->start = NULL;
+    arena->current = NULL;
+    arena->end = NULL;
 }
-
-

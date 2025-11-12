@@ -35,21 +35,16 @@ typedef u32         b32;
 // mem.h
 
 typedef struct M_Arena {
-    u8* memory;
-    u64 max;
-    u64 alloc_position;
-    u64 commit_position;
-    b8 static_size;
+    void* start;
+    void* current;
+    void* end;
 } M_Arena;
 #define M_ARENA_MAX Gigabytes(1)
-#define M_ARENA_COMMIT_SIZE Kilobytes(8)
-#define ArenaAllocArray(arena, elem_type, count) ArenaAllocArraySized(arena, sizeof(elem_type), count)
-void* ArenaAlloc(M_Arena* arena, u64 size);
-void* ArenaAllocZero(M_Arena* arena, u64 size);
-void ArenaDealloc(M_Arena* arena, u64 size);
-void* ArenaAllocArraySized(M_Arena* arena, u64 elem_size, u64 count);
-void ArenaInit(M_Arena* arena);
-void ArenaInitSized(M_Arena* arena, u64 max);
+int IsPowerOfTwo(size_t x);
+size_t AlignForward(size_t type, size_t alignment);
+void* ArenaAlloc(M_Arena* arena, size_t size);
+M_Arena ArenaInitSized(size_t capacity);
+M_Arena ArenaInit(void);
 void ArenaClear(M_Arena* arena);
 void ArenaFree(M_Arena* arena);
 
