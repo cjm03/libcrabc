@@ -97,6 +97,7 @@ void DeleteString(String* s) {
 ///
 // Strings using Arenas
 
+// Create a new string. DON'T NEED DUPLICATE FUNCTION, JUST CALL CREATE W s->str
 String M_CreateString(M_Arena* arena, char* string) {
     size_t len = strlen(string);
     String s = {0};
@@ -121,6 +122,7 @@ String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t 
     new.str = temp;
     return new;
 }
+
 
 
 
