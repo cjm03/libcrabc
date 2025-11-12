@@ -40,7 +40,8 @@ typedef struct M_Arena {
     size_t capacity;
     size_t offset;
 } M_Arena;
-#define M_ARENA_MAX Gigabytes(1)
+#define DEFAULT_ALIGNMENT sizeof(void*)
+#define M_ARENA_DEFAULT Kilobytes(16)
 int IsPowerOfTwo(size_t x);
 size_t AlignForward(size_t type, size_t alignment);
 void ArenaInitSized(M_Arena* arena, size_t capacity);
@@ -78,6 +79,7 @@ void ClearString(String* s);
 void DeleteString(String* s);
 String M_CreateString(M_Arena* arena, char* string);
 String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t end_idx);
+char* M_GetStringData(M_Arena* arena, String* s);
 
 
 #endif // ALLHEAD_H

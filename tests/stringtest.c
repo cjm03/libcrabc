@@ -59,7 +59,13 @@ int main(void)
     PrintString(&arenaFirstSliced);
     PrintString(&arenaDuplicate);
     PrintString(&arenaDuplicateSlice);
-    printf("%s\n", wimp);
+    printf("wimp: %s\n", wimp);
+
+    StringUppercase(arenaFirst.str, arenaFirst.size);
+    PrintString(&arenaFirst);
+
+    char* getdata = M_GetStringData(&arena, &arenaDuplicate);
+    printf("getdata: %s\n", getdata);
 
     ArenaFree(&arena);
     return 0;

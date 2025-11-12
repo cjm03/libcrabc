@@ -123,6 +123,13 @@ String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t 
     return new;
 }
 
+char* M_GetStringData(M_Arena* arena, String* s) {
+    char* data = ArenaAlloc(arena, s->size + 1);
+    memcpy(data, s->str, s->size);
+    data[s->size] = '\0';
+    return data;
+}
+
 
 
 
