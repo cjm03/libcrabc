@@ -17,9 +17,48 @@ typedef struct String {
     size_t size;            // The length of the string, minus the null terminator.
 } String;
 
-/////////////////////////////////
-//
-// String Functions Using Malloc
+// ######################################################
+// ### String Functions solely using Malloc
+
+/* 
+ * My strndup, don't forget to free.
+ * char * buffer: String to be copied.
+ * int n: Size of the string.
+ */
+char* Strndup(char* buffer, size_t n);
+
+/**
+ * Return ptr to substring.
+ * char * str: The source of the substring.
+ * int idx1: Index of first character of the substring.
+ * int idx2: Index of the last character of the substring.
+ */
+char* SubstringReturn(char* str, int idx1, int idx2);
+
+/** 
+ * Replace str with substring.
+ * char * str: The source of the substring, and the destination once found.
+ * int idx1: Index of first character of the substring.
+ * int idx2: Index of the last character of the substring.
+ */
+void SubstringReplace(char* str, int idx1, int idx2);
+
+/**
+ * Make all chars uppercase.
+ * char * str: The string to be uppercased.
+ * size_t n: The amount of chars to try and uppercase.
+ */
+void StringUppercase(char* str, size_t n);
+
+/**
+ * Make all chars lowercase.
+ * char * str: The string to be lowercased.
+ * size_t n: The amount of chars to try and lowercase.
+ */
+void StringLowercase(char* str, size_t n);
+
+// ######################################################
+// ### String Functions Using String structure and Malloc
 
 /**
  *  Allocate memory and create a new String*.

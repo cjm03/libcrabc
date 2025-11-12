@@ -2,8 +2,8 @@
 
 CC=gcc
 CFLAGS=-g -O2 -Wall -Wextra -pedantic -std=c99
-SRC=src/mem.c src/stdstr.c src/str.c
-TARGETOBJS=mem.o stdstr.o str.o
+SRC=src/mem.c src/str.c
+TARGETOBJS=mem.o str.o
 TARGETLIB=libcrabc.a
 ATESTBIN=arenatest
 STESTBIN=strtest

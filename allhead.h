@@ -53,21 +53,17 @@ void ArenaClear(M_Arena* arena);
 void ArenaFree(M_Arena* arena);
 
 /////////////////
-// stdstr.h
-
-char* Strndup(char* buffer, size_t n);
-char* SubstringReturn(char* str, int idx1, int idx2);
-void SubstringReplace(char* str, int idx1, int idx2);
-void StringUppercase(char* str, size_t n);
-void StringLowercase(char* str, size_t n);
-
-/////////////////
 // str.h
 
 typedef struct String {
     char* str;
     size_t size;
 } String;
+char* Strndup(char* buffer, size_t n);
+char* SubstringReturn(char* str, int idx1, int idx2);
+void SubstringReplace(char* str, int idx1, int idx2);
+void StringUppercase(char* str, size_t n);
+void StringLowercase(char* str, size_t n);
 String* CreateString(char* string);
 String* CreateSlicedString(String* s, size_t start_idx, size_t end_idx);
 void SliceString(String* s, size_t start_idx, size_t end_idx);
