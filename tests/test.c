@@ -6,28 +6,40 @@
 
 int main(void)
 {
-    String* first = CreateString("What does the fox say?");
-    String* second = CreateString("abcdefghijklmnopqrstuvwxyz0123456789");
+    // String* first = CreateString("What does the fox say?");
+    // String* second = CreateString("abcdefghijklmnopqrstuvwxyz0123456789");
+    //
+    // char* first_local = GetStringData(first);
+    // char* second_local = GetStringData(second);
+    //
+    // PrintString(first);
+    // PrintString(second);
+    // printf("first_local: %s\nSize: %zu\n", first_local, strlen(first_local));
+    // printf("second_local: %s\nSize: %zu\n", second_local, strlen(second_local));
+    //
+    // free(first_local);
+    // free(second_local);
+    //
+    // SliceString(first, 5, 12);
+    // String* second_dns = CreateSlicedString(second, 24, 32);
+    //
+    // PrintString(first);
+    // PrintString(second);
+    // PrintString(second_dns); 
+    //
+    // DeleteString(first);
+    // DeleteString(second);
+    // DeleteString(second_dns); 
 
-    char* first_local = GetStringData(first);
-    char* second_local = GetStringData(second);
 
-    PrintString(first);
-    PrintString(second);
-    printf("first_local: %s\nSize: %zu\n", first_local, strlen(first_local));
-    printf("second_local: %s\nSize: %zu\n", second_local, strlen(second_local));
+    M_Arena arena;
+    ArenaInitSized(&arena, 4096);
 
-    free(first_local);
-    free(second_local);
+    String arenaF = M_CreateString(&arena, "Dilapidated, delinquent, federline Jones!");
+    String arenaSliced = M_CreateSlicedString(&arena, &arenaF, 18, 29);
 
-    SliceString(first, 5, 12);
-    String* second_dns = CreateSlicedString(second, 24, 32);
+    PrintString(&arenaF);
+    PrintString(&arenaSliced);
 
-    PrintString(first);
-    PrintString(second);
-    PrintString(second_dns); 
-
-    DeleteString(first);
-    DeleteString(second);
-    DeleteString(second_dns); 
+    ArenaFree(&arena);
 }

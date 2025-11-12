@@ -78,6 +78,8 @@ void PrintString(String* s);
 size_t GetStringSize(String* s);
 void ClearString(String* s);
 void DeleteString(String* s);
+String M_CreateString(M_Arena* arena, char* string);
+String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t end_idx);
 
 
 #endif // ALLHEAD_H

@@ -10,11 +10,16 @@
 #define STR_H
 
 #include <stddef.h>
+#include "../include/mem.h"
 
 typedef struct String {
     char* str;              // The string itself
     size_t size;            // The length of the string, minus the null terminator.
 } String;
+
+/////////////////////////////////
+//
+// String Functions Using Malloc
 
 /**
  *  Allocate memory and create a new String*.
@@ -82,5 +87,19 @@ void ClearString(String* s);
  *  Return: no return val.
  */
 void DeleteString(String* s);
+
+
+//////////////////////////////////
+//
+// String Functions Using Arenas
+
+String M_CreateString(M_Arena* arena, char* string);
+String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t end_idx);
+String M_PrintString();
+
+
+
+
+
 
 #endif // STR_H

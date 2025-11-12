@@ -5,8 +5,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "../include/mem.h"
 #include "../include/str.h"
 #include "../include/stdstr.h"
+
+////////////////////////////
+//
+// Strings using malloc
 
 String* CreateString(char* string) {
     String* s = malloc(sizeof(String));
@@ -87,3 +92,46 @@ void DeleteString(String* s) {
     free(s->str);
     free(s);
 }
+
+////////////////////////
+///
+// Strings using Arenas
+
+String M_CreateString(M_Arena* arena, char* string) {
+    size_t len = strlen(string);
+    String s = {0};
+    s.size = len;
+    char* temp = ArenaAlloc(arena, len + 1);
+    for (size_t i = 0; i < len; i++) {
+        temp[i] = string[i];
+    }
+    temp[len] = '\0';
+    s.str = temp;
+    return s;
+}
+
+String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t end_idx) {
+    size_t newsize = end_idx - start_idx + 1;
+    String new = {0};
+    new.size = newsize;
+    char* temp = ArenaAlloc(arena, newsize + 1);
+    for (size_t i = 0; i < newsize; i++) {
+        temp[i] = s->str[i + start_idx];
+    }
+    new.str = temp;
+    return new;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
