@@ -4,8 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-////////////////
-// define.h
+// ###
+// ### define.h
+// ###
 
 typedef unsigned    char u8; 
 typedef unsigned    short u16;
@@ -32,8 +33,9 @@ typedef u32         b32;
 #define Max(a, b) (((a)>(b))?(a):(b))
 #define ArraySize(a) (sizeof(a) / sizeof(a[0]))
 
-/////////////////
-// mem.h
+// ###
+// ### mem.h
+// ###
 
 typedef struct M_Arena {
     uint8_t* base;
@@ -52,8 +54,30 @@ void ArenaRestoreToMarker(M_Arena* arena, size_t marker);
 void ArenaClear(M_Arena* arena);
 void ArenaFree(M_Arena* arena);
 
-/////////////////
-// str.h
+// ###
+// ### mmath.h
+// ###
+
+typedef struct Matrix {
+    int rows;
+    int cols;
+    int** data;
+} Matrix;
+#define GetMatrixRows(matrix) (sizeof(matrix) / sizeof(matrix[0]))
+#define GetMatrixCols(matrix) (sizeof(matrix[0]) / sizeof(matrix[0][0]))
+Matrix* CreateMatrix(int* data, int rows, int cols);
+Matrix* MatrixAdd(Matrix* a, Matrix* b);
+Matrix* MatrixSub(Matrix* a, Matrix* b);
+void MatrixScale(Matrix* m, int scale);
+Matrix* MatrixTranspose(Matrix* m);
+Matrix* MatrixMultiply(Matrix* a, Matrix* b);
+void PrintMatrix(Matrix* m);
+void FreeMatrix(Matrix* m);
+
+
+// ###
+// ### str.h
+// ###
 
 typedef struct String {
     char* str;

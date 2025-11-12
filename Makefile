@@ -2,11 +2,12 @@
 
 CC=gcc
 CFLAGS=-g -O2 -Wall -Wextra -pedantic -std=c99
-SRC=src/mem.c src/str.c
-TARGETOBJS=mem.o str.o
+SRC=src/mem.c src/str.c src/mmath.c
+TARGETOBJS=mem.o str.o mmath.o
 TARGETLIB=libcrabc.a
 ATESTBIN=arenatest
 STESTBIN=strtest
+MTESTBIN=mtest
 
 all: clean build
 
@@ -23,6 +24,13 @@ strtest:
 		rm -f $(STESTBIN); \
 	fi
 	$(CC) $(SRC) tests/stringtest.c $(CFLAGS) -o strtest
+
+.PHONY: mtest
+mtest: 
+	@if [ -f $(MTESTBIN) ]; then \
+		rm -f $(MTESTBIN); \
+	fi
+	$(CC) $(SRC) tests/mathtest.c $(CFLAGS) -o mtest
 
 build:
 	@echo "Compiling objects..."

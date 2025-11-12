@@ -1,4 +1,10 @@
 // str.h
+// ███████╗████████╗██████╗ ██╗███╗   ██╗ ██████╗ 
+// ██╔════╝╚══██╔══╝██╔══██╗██║████╗  ██║██╔════╝ 
+// ███████╗   ██║   ██████╔╝██║██╔██╗ ██║██║  ███╗
+// ╚════██║   ██║   ██╔══██╗██║██║╚██╗██║██║   ██║
+// ███████║   ██║   ██║  ██║██║██║ ╚████║╚██████╔╝
+// ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
 //
 // Headerfile for str.c, a custom library for simpler management, control, and customization
 // of strings in C.
@@ -12,15 +18,18 @@
 #include <stddef.h>
 #include "../include/mem.h"
 
+// structure holding the string and its length minus the NULL term
 typedef struct String {
-    char* str;              // The string itself
-    size_t size;            // The length of the string, minus the null terminator.
+    char* str;
+    size_t size;
 } String;
 
-// ######################################################
-// ### String Functions solely using Malloc
 
-/* 
+// ###
+// ### ONLY STDLIB MALLOC
+// ###
+
+/**
  * My strndup, don't forget to free.
  * char * buffer: String to be copied.
  * int n: Size of the string.
@@ -57,8 +66,9 @@ void StringUppercase(char* str, size_t n);
  */
 void StringLowercase(char* str, size_t n);
 
-// ######################################################
-// ### String Functions Using String structure and Malloc
+// ###
+// ### STRING STRUCT + STDLIB MALLOC
+// ###
 
 /**
  *  Allocate memory and create a new String*.
@@ -128,17 +138,23 @@ void ClearString(String* s);
 void DeleteString(String* s);
 
 
-//////////////////////////////////
-//
-// String Functions Using Arenas
+// ###
+// ### STRING STRUCT + MEMORY ARENA
+// ###
 
+/**
+ *
+ */
 String M_CreateString(M_Arena* arena, char* string);
+
+/**
+ *
+ */
 String M_CreateSlicedString(M_Arena* arena, String* s, size_t start_idx, size_t end_idx);
+
+/**
+ *
+ */
 char* M_GetStringData(M_Arena* arena, String* s);
-
-
-
-
-
 
 #endif // STR_H
