@@ -1,3 +1,12 @@
+// stdstr.h
+//
+// Headerfile for stdstr.c, which is a collection of string-related functions to be used
+// with barebones C, and do not require custom structures or memory implementations. Make 
+// sure to figure out what needs to be freed!!!
+//
+// Charlie Moye 
+// 11-12-2025
+
 #ifndef STDSTR_H
 #define STDSTR_H
 

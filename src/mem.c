@@ -1,3 +1,5 @@
+// mem.h - Memory Arenas
+
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
@@ -8,6 +10,8 @@
 #include "../include/define.h"
 
 #define DEFAULT_ALIGNMENT sizeof(void*)
+
+// Alignment
 
 b8 IsPowerOfTwo(uintptr_t x) {
     return (x & (x - 1)) == 0;
@@ -24,7 +28,6 @@ u64 AlignForwardU64(u64 ptr, u64 align) {
     }
     return p;
 }
-
 
 // Arena
 
@@ -58,21 +61,10 @@ void* ArenaAllocZero(M_Arena* arena, u64 size) {
 }
 
 void ArenaDealloc(M_Arena* arena, u64 size) {
-    if (size > arena->alloc_position)
+    if (size > arena->alloc_position) {
         size = arena->alloc_position;
+    }
     arena->alloc_position -= size;
-}
-
-void ArenaDeallocTo(M_Arena* arena, u64 pos) {
-    if (pos > arena->max) pos = arena->max;
-    if (pos < 0) pos = 0;
-    arena->alloc_position = pos;
-}
-
-void* ArenaRaise(M_Arena* arena, void* ptr, u64 size) {
-    void* raised = ArenaAlloc(arena, size);
-    memcpy(raised, ptr, size);
-    return raised;
 }
 
 void* ArenaAllocArraySized(M_Arena* arena, u64 elem_size, u64 count) {
@@ -80,7 +72,7 @@ void* ArenaAllocArraySized(M_Arena* arena, u64 elem_size, u64 count) {
 }
 
 void ArenaInit(M_Arena* arena) {
-    MemoryZeroStruct(arena, M_Arena);
+    memset(arena, 0, sizeof(M_Arena));
     arena->max = M_ARENA_MAX;
     arena->memory = mmap(NULL, arena->max, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
     arena->alloc_position = 0;
@@ -89,7 +81,7 @@ void ArenaInit(M_Arena* arena) {
 }
 
 void ArenaInitSized(M_Arena* arena, u64 max) {
-    MemoryZeroStruct(arena, M_Arena);
+    memset(arena, 0, sizeof(M_Arena));
     arena->max = max;
     arena->memory = mmap(NULL, arena->max, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
     arena->alloc_position = 0;

@@ -29,10 +29,6 @@ typedef u32         b32;
 #define Kilobytes(count) (u64) (count * 1024)
 #define Min(a, b) (((a)<(b))?(a):(b))
 #define Max(a, b) (((a)>(b))?(a):(b))
-#define MemoryCopy(d, s, z) memmove((d), (s), (z))
-#define MemoryCopyStruct(d, s) MemoryCopy((d), (s), Min(sizeof(*(d)), sizeof(*(s))))
-#define MemoryZero(d, z) memset((d), 0, (z))
-#define MemoryZeroStruct(d, s) MemoryZero((d), sizeof(s))
 #define ArraySize(a) (sizeof(a) / sizeof(a[0]))
 
 /////////////////
@@ -51,8 +47,6 @@ typedef struct M_Arena {
 void* ArenaAlloc(M_Arena* arena, u64 size);
 void* ArenaAllocZero(M_Arena* arena, u64 size);
 void ArenaDealloc(M_Arena* arena, u64 size);
-void ArenaDeallocTo(M_Arena* arena, u64 pos);
-void* ArenaRaise(M_Arena* arena, void* ptr, u64 size);
 void* ArenaAllocArraySized(M_Arena* arena, u64 elem_size, u64 count);
 void ArenaInit(M_Arena* arena);
 void ArenaInitSized(M_Arena* arena, u64 max);

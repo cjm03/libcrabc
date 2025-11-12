@@ -1,3 +1,5 @@
+// stdstr.c - String Functions for Barebones C
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
