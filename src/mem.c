@@ -1,6 +1,7 @@
 // mem.c - Memory Arenas
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,36 +23,49 @@ size_t AlignForward(size_t type, size_t alignment) {
     return p;
 }
 
-M_Arena ArenaInitSized(size_t capacity) {
-    void* init = calloc(capacity, 1);
-    M_Arena arena;
-    arena.start = init;
-    arena.current = init;
-    arena.end = init + capacity;
-    return arena;
+void ArenaInitSized(M_Arena* arena, size_t capacity) {
+    if (capacity > 0) {
+        uint8_t* init = calloc(capacity, 1);
+        if (!init) {
+            arena->capacity = 0;
+            arena->offset = 0;
+        } else {
+            arena->base = init;
+            arena->capacity = capacity;
+            arena->offset = 0;
+        }
+    }
 }
 
-M_Arena ArenaInit(void) {
-    M_Arena arena = ArenaInitSized(M_ARENA_DEFAULT);
-    return arena;
+void ArenaInit(M_Arena* arena) {
+    ArenaInitSized(arena, M_ARENA_DEFAULT);
 }
 
 void* ArenaAlloc(M_Arena* arena, size_t size) {
     if (arena == 0) return NULL;
     size_t aligned = AlignForward(size, DEFAULT_ALIGNMENT);
-    if (arena->current + aligned >= arena->end) return NULL;
-    void* p = arena->current;
-    arena->current += aligned;
+    if (arena->offset + aligned >= arena->capacity) return NULL;
+    void* p = arena->base + arena->offset;
+    arena->offset += aligned;
     return p;
 }
 
+size_t ArenaGetMarker(M_Arena* arena) {
+    return arena->offset;
+}
+
+void ArenaRestoreToMarker(M_Arena* arena, size_t marker) {
+    if (marker >= arena->offset) exit(EXIT_FAILURE);
+    arena->offset = marker;
+}
+
 void ArenaClear(M_Arena* arena) {
-    arena->current = arena->start;
+    arena->offset = 0;
 }
 
 void ArenaFree(M_Arena* arena) {
-    free(arena->start);
-    arena->start = NULL;
-    arena->current = NULL;
-    arena->end = NULL;
+    if (arena->base) free(arena->base);
+    arena->base = NULL;
+    arena->capacity = 0;
+    arena->offset = 0;
 }

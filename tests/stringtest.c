@@ -32,7 +32,8 @@ int main(void)
     // DeleteString(second_dns); 
 
 
-    M_Arena arena = ArenaInitSized(Kilobytes(16));
+    M_Arena arena = {0};
+    ArenaInitSized(&arena, Kilobytes(16));
     char* arenaString = "Dilapidated, delinquent, federline Jones!";
 
     String arenaF = M_CreateString(&arena, arenaString);

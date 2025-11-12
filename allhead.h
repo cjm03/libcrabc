@@ -2,6 +2,7 @@
 #define ALLHEAD_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 ////////////////
 // define.h
@@ -35,16 +36,18 @@ typedef u32         b32;
 // mem.h
 
 typedef struct M_Arena {
-    void* start;
-    void* current;
-    void* end;
+    uint8_t* base;
+    size_t capacity;
+    size_t offset;
 } M_Arena;
 #define M_ARENA_MAX Gigabytes(1)
 int IsPowerOfTwo(size_t x);
 size_t AlignForward(size_t type, size_t alignment);
+void ArenaInitSized(M_Arena* arena, size_t capacity);
+void ArenaInit(M_Arena* arena);
 void* ArenaAlloc(M_Arena* arena, size_t size);
-M_Arena ArenaInitSized(size_t capacity);
-M_Arena ArenaInit(void);
+size_t ArenaGetMarker(M_Arena* arena);
+void ArenaRestoreToMarker(M_Arena* arena, size_t marker);
 void ArenaClear(M_Arena* arena);
 void ArenaFree(M_Arena* arena);
 
