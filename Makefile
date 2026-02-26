@@ -8,6 +8,7 @@ TARGETLIB=libcrabc.a
 ATESTBIN=arenatest
 STESTBIN=strtest
 MTESTBIN=mtest
+DTESTBIN=datatest
 
 all: clean build
 
@@ -16,21 +17,28 @@ arenatest:
 	@if [ -f $(ATESTBIN) ]; then \
 		rm -f $(ATESTBIN); \
 	fi
-	$(CC) $(SRC) tests/arenatest.c $(CFLAGS) -o arenatest
+	$(CC) $(SRC) tests/arenatest.c $(CFLAGS) -o $(ATESTBIN)
 
 .PHONY: strtest
 strtest:
 	@if [ -f $(STESTBIN) ]; then \
 		rm -f $(STESTBIN); \
 	fi
-	$(CC) $(SRC) tests/stringtest.c $(CFLAGS) -o strtest
+	$(CC) $(SRC) tests/stringtest.c $(CFLAGS) -o $(STESTBIN)
 
 .PHONY: mtest
 mtest: 
 	@if [ -f $(MTESTBIN) ]; then \
 		rm -f $(MTESTBIN); \
 	fi
-	$(CC) $(SRC) tests/mathtest.c $(CFLAGS) -o mtest
+	$(CC) $(SRC) tests/mathtest.c $(CFLAGS) -o $(MTESTBIN)
+
+.PHONY: datatest
+datatest:
+	@if [ -f $(DTESTBIN) ]; then \
+		rm -f $(DTESTBIN); \
+	fi
+	$(CC) tests/datatest.c src/data.c $(CFLAGS) -o $(DTESTBIN)
 
 build:
 	@echo "Compiling objects..."
